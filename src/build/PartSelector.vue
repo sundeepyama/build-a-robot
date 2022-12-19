@@ -1,9 +1,17 @@
 <template>
   <div class="part" :class="position" >
-    <img :src="selectedPart.src" title="arm"/>
+    <img :src="selectedPart.src" @click="showPartInformation()" title="arm"/>
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
     <span class="sale" v-show="selectedPart.onSale">Sale!</span>
+    <teleport to="#partInfo" v-if="showPartInfo">
+      <div v-if="showPartInfo">
+        <div>
+          {{selectedPart.cost}} {{selectedPart.title}} {{selectedPart.type}}
+        </div>
+        <div>{{selectedPart.description}}</div>
+      </div>
+  </teleport>
   </div>
 </template>
 
@@ -34,7 +42,7 @@ export default {
     },
   },
   data() {
-    return { selectedPartIndex: 0 };
+    return { selectedPartIndex: 0, showPartInfo: false };
   },
   computed: {
     selectedPart() {
@@ -44,8 +52,17 @@ export default {
   created() {
     this.emitSelectedPart();
   },
+  updated() {
+    this.emitSelectedPart();
+  },
   methods: {
-    emitSeletedPart() {
+    showPartInformation() {
+      this.$router.push({
+        name: 'Parts',
+        params: { id: this.selectedPart.id, partType: this.selectedPart.type },
+      });
+    },
+    emitSelectedPart() {
       this.$emit('partSelected', this.selectedPart);
     },
     selectNextPart() {
@@ -53,14 +70,12 @@ export default {
         this.selectedPartIndex,
         this.parts.length,
       );
-      this.emitSelectedPart();
     },
     selectPreviousPart() {
       this.selectedPartIndex = getPreviousValidIndex(
         this.selectedPartIndex,
         this.parts.length,
       );
-      this.emitSelectedPart();
     },
 
   },
@@ -94,6 +109,7 @@ export default {
 }
 .part img {
   width:165px;
+  cursor: pointer;
 }
 .top {
   border-bottom: none;
