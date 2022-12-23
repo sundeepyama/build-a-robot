@@ -49,6 +49,7 @@ body {
   margin-top: 60px;
 }
 main {
+  display: flex;
   padding: 30px;
   background-color: white;
   width: 964;
@@ -88,7 +89,7 @@ ul {
 .aside {
   padding: 30px;
   background-color: #aaa;
-  width: 100px;
+  width: 50px;
   min-height: 300px;
 }
 </style>
